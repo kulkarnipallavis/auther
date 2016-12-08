@@ -25,6 +25,7 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use('/login', require('./login.router'));
 app.use('/api', require('../api/api.router'));
 
 var validFrontendRoutes = ['/', '/stories', '/users', '/stories/:id', '/users/:id', '/signup', '/login'];
