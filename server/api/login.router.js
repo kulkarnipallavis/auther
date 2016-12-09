@@ -10,11 +10,11 @@ router.post('/', function(req, res, next){
 			}
 		})
 	.then(function(userFound){
-		 if (!userFound) res.sendStatus(401);
-		 else{
-		 	req.session.user = userFound;
-		 	res.sendStatus(200);
-		 }
+		if (!userFound) res.sendStatus(401);
+		else {
+			req.session.user = userFound;
+			res.status(200).send(userFound);
+		}
 	})
 	.catch(next);
 });
