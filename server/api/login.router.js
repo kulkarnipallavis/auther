@@ -1,7 +1,7 @@
 var router = require('express').Router();
 var User = require('./users/user.model');
 
-router.post('/login', function(req, res, next){
+router.post('/', function(req, res, next){
 	console.log("%%%%%%%%%% in login");
 	User.findOne({
 			where : {
@@ -12,7 +12,7 @@ router.post('/login', function(req, res, next){
 	.then(function(userFound){
 		 if (!userFound) res.sendStatus(401);
 		 else{
-		 	req.session.user = user;
+		 	req.session.user = userFound;
 		 	res.sendStatus(200);
 		 }
 	})
