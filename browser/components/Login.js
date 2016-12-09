@@ -63,16 +63,16 @@ class Login extends React.Component {
   onLoginSubmit(event) {
     const { message } = this.props.message;
     event.preventDefault();
-    this.email = event.target.email.value;
-    this.password = event.target.password.value;
-    console.log('loginsubmit: ', this.email, this.password);
-    this.props.login({'email': this.email, 'password': this.password});
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    console.log('loginsubmit: ', email, password);
+    this.props.login({'email': email, 'password': password});
   }
 }
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapState = (state) => ({ message: 'Log in', email: state.login.email, password: state.login.password });
+const mapState = (state) => ({ message: 'Log in'});
 const mapDispatch = (dispatch) => {
   return {
     login(obj) {

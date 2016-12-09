@@ -24168,6 +24168,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	//import signup from './signup';
+	
 	exports.default = (0, _redux.combineReducers)({ users: _users2.default, stories: _stories2.default, login: _login2.default });
 
 /***/ },
@@ -32083,10 +32085,10 @@
 	      var message = this.props.message.message;
 	
 	      event.preventDefault();
-	      this.email = event.target.email.value;
-	      this.password = event.target.password.value;
-	      console.log('loginsubmit: ', this.email, this.password);
-	      this.props.login({ 'email': this.email, 'password': this.password });
+	      var email = event.target.email.value;
+	      var password = event.target.password.value;
+	      console.log('loginsubmit: ', email, password);
+	      this.props.login({ 'email': email, 'password': password });
 	    }
 	  }]);
 	
@@ -32096,7 +32098,7 @@
 	/* -----------------    CONTAINER     ------------------ */
 	
 	var mapState = function mapState(state) {
-	  return { message: 'Log in', email: state.login.email, password: state.login.password };
+	  return { message: 'Log in' };
 	};
 	var mapDispatch = function mapDispatch(dispatch) {
 	  return {
@@ -32127,6 +32129,8 @@
 	var _reactRedux = __webpack_require__(178);
 	
 	var _reactRouter = __webpack_require__(246);
+	
+	var _users = __webpack_require__(217);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -32240,10 +32244,13 @@
 	  }, {
 	    key: 'onSignupSubmit',
 	    value: function onSignupSubmit(event) {
-	      var message = this.props.message;
+	      var message = this.props.message.message;
 	
 	      event.preventDefault();
-	      console.log(message + ' isn\'t implemented yet');
+	      var email = event.target.email.value;
+	      var password = event.target.password.value;
+	      console.log('signupsubmit: ', email, password);
+	      this.props.signup({ 'email': email, 'password': password });
 	    }
 	  }]);
 	
@@ -32255,7 +32262,13 @@
 	var mapState = function mapState() {
 	  return { message: 'Sign up' };
 	};
-	var mapDispatch = null;
+	var mapDispatch = function mapDispatch(dispatch) {
+	  return {
+	    signup: function signup(obj) {
+	      dispatch((0, _users.addUser)(obj));
+	    }
+	  };
+	};
 	
 	exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(Signup);
 

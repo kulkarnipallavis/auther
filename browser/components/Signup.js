@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from'react-redux';
 import { browserHistory } from 'react-router';
+import { addUser } from '../redux/users'
 
 /* -----------------    COMPONENT     ------------------ */
 
 class Signup extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.onSignupSubmit = this.onSignupSubmit.bind(this);
   }
 
@@ -20,19 +21,19 @@ class Signup extends React.Component {
                 <div className="form-group">
                   <label>email</label>
                   <input
-                    name="email" 
-                    type="email" 
-                    className="form-control" 
-                    required 
+                    name="email"
+                    type="email"
+                    className="form-control"
+                    required
                   />
                 </div>
                 <div className="form-group">
                     <label>password</label>
-                    <input 
+                    <input
                       name="password"
-                      type="password" 
-                      className="form-control" 
-                      required 
+                      type="password"
+                      className="form-control"
+                      required
                     />
                 </div>
                 <button type="submit" className="btn btn-block btn-primary">{message}</button>
@@ -58,15 +59,24 @@ class Signup extends React.Component {
   }
 
   onSignupSubmit(event) {
-    const { message } = this.props;
+    const { message } = this.props.message;
     event.preventDefault();
-    console.log(`${message} isn't implemented yet`);
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    console.log('signupsubmit: ', email, password);
+    this.props.signup({'email': email, 'password': password});
   }
 }
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapState = () => ({ message: 'Sign up' })
-const mapDispatch = null
+const mapState = () => ({ message: 'Sign up'});
+const mapDispatch = (dispatch) => {
+  return {
+    signup(obj) {
+      dispatch(addUser(obj));
+    }
+  }
+}
 
 export default connect(mapState, mapDispatch)(Signup);
