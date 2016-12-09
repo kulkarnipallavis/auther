@@ -25894,7 +25894,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.logout = exports.login = undefined;
+	exports.userInfo = exports.logout = exports.login = undefined;
 	exports.default = reducer;
 	
 	var _axios = __webpack_require__(218);
@@ -25945,6 +25945,12 @@
 	    _axios2.default.get('/logout').then(function (res) {
 	      return dispatch(setUser({}));
 	    });
+	  };
+	};
+	
+	var userInfo = exports.userInfo = function userInfo() {
+	  return function (dispatch, getState) {
+	    return getState().login.user;
 	  };
 	};
 
@@ -31996,9 +32002,6 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
 	
-	    _this.email = _this.props.email;
-	    _this.password = _this.props.password;
-	    console.log(_this.props);
 	    _this.onLoginSubmit = _this.onLoginSubmit.bind(_this);
 	    return _this;
 	  }
@@ -32115,6 +32118,7 @@
 	  return {
 	    login: function login(obj) {
 	      dispatch((0, _login2.login)(obj));
+	      _reactRouter.browserHistory.push('/');
 	    }
 	  };
 	};
@@ -32277,6 +32281,7 @@
 	  return {
 	    signup: function signup(obj) {
 	      dispatch((0, _users.addUser)(obj));
+	      _reactRouter.browserHistory.push('/');
 	    }
 	  };
 	};
@@ -32325,6 +32330,7 @@
 	  function UserList(props) {
 	    _classCallCheck(this, UserList);
 	
+	    // console.log(props);
 	    var _this = _possibleConstructorReturn(this, (UserList.__proto__ || Object.getPrototypeOf(UserList)).call(this, props));
 	
 	    _this.state = {
@@ -32343,6 +32349,8 @@
 	  _createClass(UserList, [{
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container' },
@@ -32358,7 +32366,7 @@
 	          'div',
 	          { className: 'user-list' },
 	          this.props.users.filter(this.filterUser).map(function (user) {
-	            return _react2.default.createElement(_UserItem2.default, { user: user, key: user.id });
+	            return _react2.default.createElement(_UserItem2.default, { user: user, key: user.id, currentUser: _this2.props.currentUser });
 	          })
 	        )
 	      );
@@ -32366,7 +32374,7 @@
 	  }, {
 	    key: 'renderUserSearch',
 	    value: function renderUserSearch() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -32390,7 +32398,7 @@
 	                placeholder: 'Jean Doe',
 	                className: 'form-like',
 	                onChange: function onChange(e) {
-	                  return _this2.setState({ name: e.target.value });
+	                  return _this3.setState({ name: e.target.value });
 	                }
 	              })
 	            ),
@@ -32402,7 +32410,7 @@
 	                placeholder: 'email@website.com',
 	                className: 'form-like',
 	                onChange: function onChange(e) {
-	                  return _this2.setState({ email: e.target.value });
+	                  return _this3.setState({ email: e.target.value });
 	                }
 	              })
 	            ),
@@ -32414,7 +32422,7 @@
 	                placeholder: '(555) 555-5555',
 	                className: 'form-like',
 	                onChange: function onChange(e) {
-	                  return _this2.setState({ phone: e.target.value });
+	                  return _this3.setState({ phone: e.target.value });
 	                }
 	              })
 	            )
@@ -32445,7 +32453,7 @@
 	            { className: 'media-left media-middle icon-container' },
 	            _react2.default.createElement('button', {
 	              type: 'submit',
-	              className: 'glyphicon glyphicon-plus clickable' })
+	              className: 'glyphicon glyphicon-plus clickable', disabled: !this.props.currentUser.id ? true : false })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -32508,9 +32516,11 @@
 	
 	/* -----------------    CONTAINER     ------------------ */
 	
-	var mapState = function mapState(_ref) {
-	  var users = _ref.users;
-	  return { users: users };
+	// const mapState = ({ users }) => ({ users })
+	
+	
+	var mapState = function mapState(state) {
+	  return { users: state.users, currentUser: state.login.user };
 	};
 	
 	var mapDispatch = { addUser: _users.addUser };
@@ -32541,6 +32551,8 @@
 	
 	var _stories = __webpack_require__(243);
 	
+	var _login = __webpack_require__(244);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32567,6 +32579,7 @@
 			key: 'render',
 			value: function render() {
 				var user = this.props.user;
+	
 	
 				return _react2.default.createElement(
 					'div',
@@ -32615,13 +32628,13 @@
 						_react2.default.createElement(
 							'div',
 							{ className: 'media-right media-middle' },
-							_react2.default.createElement(
+							this.props.currentUser.isAdmin ? _react2.default.createElement(
 								'button',
 								{
 									className: 'btn btn-default',
 									onClick: this.removeUserCallback },
 								_react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
-							)
+							) : null
 						)
 					)
 				);
@@ -32651,8 +32664,9 @@
 	/* -----------------    CONTAINER     ------------------ */
 	
 	var mapState = function mapState(_ref) {
-		var stories = _ref.stories;
-		return { stories: stories };
+		var stories = _ref.stories,
+		    login = _ref.login;
+		return { stories: stories, currentUser: login.user };
 	};
 	
 	var mapDispatch = { removeUser: _users.removeUser, removeStory: _stories.removeStory };
@@ -49962,14 +49976,14 @@
 	            )
 	          )
 	        ),
-	        _react2.default.createElement(
+	        this.props.currentUser.isAdmin ? _react2.default.createElement(
 	          'button',
 	          { className: 'btn btn-default btn-xs',
 	            onClick: function onClick() {
 	              return removeStory(story.id);
 	            } },
 	          _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
-	        )
+	        ) : null
 	      );
 	    }
 	  }]);
@@ -49979,7 +49993,14 @@
 	
 	/* -----------------    CONTAINER     ------------------ */
 	
-	var mapState = null;
+	// const mapState = null;
+	
+	
+	var mapState = function mapState(_ref) {
+	  var stories = _ref.stories,
+	      login = _ref.login;
+	  return { stories: stories, currentUser: login.user };
+	};
 	var mapDispatch = { removeStory: _stories.removeStory };
 	
 	exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(StoryItem);
@@ -50043,6 +50064,8 @@
 	  _createClass(StoryList, [{
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'container' },
@@ -50051,9 +50074,9 @@
 	        _react2.default.createElement(
 	          'ul',
 	          { className: 'list-group' },
-	          this.renderNewStoryWidget(),
+	          this.props.currentUser.id ? this.renderNewStoryWidget() : null,
 	          this.props.stories.filter(this.filterStory).map(function (story) {
-	            return _react2.default.createElement(_StoryItem2.default, { story: story, key: story.id });
+	            return _react2.default.createElement(_StoryItem2.default, { story: story, key: story.id, currentUser: _this2.props.currentUser });
 	          })
 	        )
 	      );
@@ -50061,7 +50084,7 @@
 	  }, {
 	    key: 'renderStorySearch',
 	    value: function renderStorySearch() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -50077,7 +50100,7 @@
 	              placeholder: 'Story Title',
 	              className: 'form-like large-font',
 	              onChange: function onChange(e) {
-	                return _this2.setState({ title: e.target.value });
+	                return _this3.setState({ title: e.target.value });
 	              }
 	            })
 	          ),
@@ -50098,7 +50121,7 @@
 	              type: 'text',
 	              placeholder: 'Jean Doe',
 	              onChange: function onChange(e) {
-	                return _this2.setState({ name: e.target.value });
+	                return _this3.setState({ name: e.target.value });
 	              }
 	            })
 	          )
@@ -50193,10 +50216,14 @@
 	
 	/* -----------------    CONTAINER     ------------------ */
 	
+	// const mapState = ({ users, stories }) => ({ users, stories });
+	
+	
 	var mapState = function mapState(_ref) {
 	  var users = _ref.users,
-	      stories = _ref.stories;
-	  return { users: users, stories: stories };
+	      stories = _ref.stories,
+	      login = _ref.login;
+	  return { users: users, currentUser: login.user, stories: stories };
 	};
 	
 	var mapDispatch = { addStory: _stories.addStory };
@@ -50283,7 +50310,7 @@
 	              defaultValue: story.title,
 	              onChange: function onChange(e) {
 	                return _this2.onStoryUpdate({ title: e.target.value });
-	              }
+	              }, disabled: !this.props.currentUser.id ? true : false
 	            })
 	          ),
 	          _react2.default.createElement(
@@ -50298,7 +50325,19 @@
 	          _react2.default.createElement(
 	            'li',
 	            null,
-	            _react2.default.createElement(
+	            !this.props.currentUser.id ? _react2.default.createElement(
+	              'div',
+	              null,
+	              users.filter(function (user) {
+	                return user.id === story.author_id;
+	              }).map(function (user, index) {
+	                return _react2.default.createElement(
+	                  'div',
+	                  { key: index, value: user.id },
+	                  user.name
+	                );
+	              })
+	            ) : _react2.default.createElement(
 	              'select',
 	              {
 	                defaultValue: story.author_id,
@@ -50321,7 +50360,7 @@
 	          html: this.renderRawHTML(),
 	          onChange: function onChange(e) {
 	            return _this2.onStoryUpdate({ paragraphs: e.target.value });
-	          } })
+	          }, disabled: !this.props.currentUser.id ? true : false })
 	      );
 	    }
 	  }, {
@@ -50364,14 +50403,15 @@
 	
 	var mapState = function mapState(_ref, ownProps) {
 	  var stories = _ref.stories,
-	      users = _ref.users;
+	      users = _ref.users,
+	      login = _ref.login;
 	
 	  var id = Number(ownProps.params.id);
 	  var story = _lodash2.default.find(stories, function (story) {
 	    return story.id === id;
 	  });
 	
-	  return { story: story, users: users };
+	  return { story: story, users: users, currentUser: login.user };
 	};
 	
 	var mapDispatch = { updateStory: _stories.updateStory };

@@ -23,10 +23,14 @@ class StoryItem extends React.Component {
             <Link to={`/users/${story.author_id}`}>{story.author.name}</Link>
           </li>
         </ul>
-        <button className="btn btn-default btn-xs" 
-                onClick={ () => removeStory(story.id) }>
-          <span className="glyphicon glyphicon-remove"></span>
-        </button>
+        { 
+          this.props.currentUser.isAdmin ? 
+               (<button className="btn btn-default btn-xs" 
+                    onClick={ () => removeStory(story.id) }>
+                <span className="glyphicon glyphicon-remove"></span>
+              </button>) : null
+        }
+       
       </li>
     );
   }
@@ -35,7 +39,8 @@ class StoryItem extends React.Component {
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapState = null;
+// const mapState = null;
+const mapState = ({ stories, login }) => ({ stories, currentUser : login.user })
 const mapDispatch = { removeStory }
 
 export default connect(mapState, mapDispatch)(StoryItem);

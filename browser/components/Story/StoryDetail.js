@@ -29,27 +29,37 @@ class StoryDetail extends React.Component {
             <input 
               className="form-like large-font"
               defaultValue={story.title}
-              onChange={e => this.onStoryUpdate({ title: e.target.value })}
+              onChange={e => this.onStoryUpdate({ title: e.target.value })} disabled={!this.props.currentUser.id ? true : false}
             />
           </li>
           <li><span className="muted">by</span></li>
           <li>
-            <select 
-              defaultValue={story.author_id} 
-              onChange={e => this.onStoryUpdate({ author_id: e.target.value })}>
-            { 
-              users.map((user, index) => (
-                <option key={index} value={user.id}>{user.name}</option>
-              ))
+            {!this.props.currentUser.id
+              ? (<div >
+                    { 
+                      users.filter(user => user.id === story.author_id).map((user, index) => (
+                      <div key={index} value={user.id}>{user.name}</div>
+                      ))
+                    }
+                </div>) 
+              : (<select 
+                  defaultValue={story.author_id} 
+                  onChange={e => this.onStoryUpdate({ author_id: e.target.value })} >
+                    { 
+                      users.map((user, index) => (
+                      <option key={index} value={user.id}>{user.name}</option>
+                      ))
+                    }
+                </select>)
             }
-            </select>
+            
           </li>
         </ul>
         <br />
         <ContentEditable 
            placeholder="(text here)"
            html={this.renderRawHTML()}
-           onChange={e => this.onStoryUpdate({ paragraphs: e.target.value })}>
+           onChange={e => this.onStoryUpdate({ paragraphs: e.target.value })} disabled={!this.props.currentUser.id ? true : false}>
         </ContentEditable>
       </div>
     );
@@ -85,11 +95,11 @@ class StoryDetail extends React.Component {
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapState = ({ stories, users }, ownProps) => {
+const mapState = ({ stories, users, login }, ownProps) => {
   const id = Number(ownProps.params.id);
   const story = _.find(stories, story => story.id === id);
   
-  return { story, users }
+  return { story, users, currentUser : login.user }
 }
 
 const mapDispatch = { updateStory }

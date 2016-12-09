@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { connect } from'react-redux';
 import { removeUser } from '../../redux/users'; 
 import { removeStory } from '../../redux/stories'; 
+import { userInfo } from '../../redux/login';
 
 /* -----------------    COMPONENT     ------------------ */
 
@@ -13,6 +14,7 @@ class UserItem extends React.Component {
 	}
 	render() {
 		const { user } = this.props;
+
 		return (
 			<div className="list-group-item min-content user-item">
 				<div className="media">
@@ -33,11 +35,12 @@ class UserItem extends React.Component {
 				    </h5>
 				  </Link> 
 				  <div className="media-right media-middle">
-						<button 
+				  	{this.props.currentUser.isAdmin ? (<button 
 								className="btn btn-default" 
 								onClick={this.removeUserCallback}>
-				  		<span className="glyphicon glyphicon-remove"></span>
-						</button>
+				  		<span className="glyphicon glyphicon-remove" ></span>
+						</button>) : null}
+						
 					</div>
 				</div>
 			</div>
@@ -56,7 +59,7 @@ class UserItem extends React.Component {
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapState = ({ stories }) => ({ stories })
+const mapState = ({ stories, login }) => ({ stories, currentUser : login.user })
 
 const mapDispatch = { removeUser, removeStory }
 

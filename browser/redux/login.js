@@ -35,3 +35,7 @@ export const logout = (req) => dispatch => {
   axios.get('/logout')
        .then(res => dispatch(setUser({})));
 }
+
+export const userInfo = () => (dispatch, getState) => {
+  return getState().login.user;
+}

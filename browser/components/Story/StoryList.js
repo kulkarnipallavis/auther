@@ -28,11 +28,11 @@ class StoryList extends React.Component {
         <br />
 
         <ul className="list-group">
-        { this.renderNewStoryWidget() }
+        {this.props.currentUser.id ?  this.renderNewStoryWidget() : null}
         { 
           this.props.stories
             .filter(this.filterStory) 
-            .map(story => <StoryItem story={story} key={story.id} />)
+            .map(story => <StoryItem story={story} key={story.id} currentUser={this.props.currentUser} />)
         }  
         </ul>
       </div>
@@ -127,7 +127,9 @@ class StoryList extends React.Component {
 
 /* -----------------    CONTAINER     ------------------ */
  
-const mapState = ({ users, stories }) => ({ users, stories });
+// const mapState = ({ users, stories }) => ({ users, stories });
+const mapState = ({ users, stories, login }) => ({ users, currentUser : login.user , stories })
+
 
 const mapDispatch = { addStory }
 

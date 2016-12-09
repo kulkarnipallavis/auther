@@ -9,7 +9,7 @@ import UserItem from './UserItem';
 class UserList extends Component {
   constructor(props) {
     super(props);
-
+    // console.log(props);
     this.state = {
       name: '', 
       email: '', 
@@ -35,7 +35,7 @@ class UserList extends Component {
         { 
           this.props.users 
             .filter(this.filterUser)
-            .map(user => <UserItem user={user} key={user.id} />)
+            .map(user => <UserItem user={user} key={user.id} currentUser={this.props.currentUser}/>)
         }
         </div>
       </div>
@@ -96,9 +96,10 @@ class UserList extends Component {
       <div className="list-group-item min-content user-item">
         <form className="media" onSubmit={this.submit}>
           <div className="media-left media-middle icon-container">
+           
             <button 
               type="submit" 
-              className="glyphicon glyphicon-plus clickable">
+              className="glyphicon glyphicon-plus clickable" disabled={!this.props.currentUser.id ? true : false}>
             </button>
           </div>
           <div className="media-body">
@@ -151,7 +152,8 @@ class UserList extends Component {
 
 /* -----------------    CONTAINER     ------------------ */
 
-const mapState = ({ users }) => ({ users })
+// const mapState = ({ users }) => ({ users })
+const mapState = (state) => ({ users : state.users, currentUser : state.login.user })
 
 const mapDispatch = { addUser }
 

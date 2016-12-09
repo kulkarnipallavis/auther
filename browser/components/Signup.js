@@ -75,6 +75,7 @@ const mapDispatch = (dispatch) => {
   return {
     signup(obj) {
       dispatch(addUser(obj));
+      browserHistory.push('/');
     }
   }
 }

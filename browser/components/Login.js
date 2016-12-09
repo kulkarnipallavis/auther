@@ -8,9 +8,6 @@ import { login } from '../redux/login'
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.email = this.props.email;
-    this.password = this.props.password;
-    console.log(this.props);
     this.onLoginSubmit = this.onLoginSubmit.bind(this);
   }
 
@@ -77,6 +74,7 @@ const mapDispatch = (dispatch) => {
   return {
     login(obj) {
       dispatch(login(obj));
+      browserHistory.push('/');
     }
   }
 }
