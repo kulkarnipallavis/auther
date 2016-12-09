@@ -25894,7 +25894,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.login = undefined;
+	exports.logout = exports.login = undefined;
 	exports.default = reducer;
 	
 	var _axios = __webpack_require__(218);
@@ -25916,7 +25916,7 @@
 	/* ------------       REDUCER     ------------------ */
 	
 	function reducer() {
-	  var login = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var login = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { user: {} };
 	  var action = arguments[1];
 	
 	  switch (action.type) {
@@ -25936,6 +25936,14 @@
 	  return function (dispatch) {
 	    _axios2.default.post('/login', req).then(function (res) {
 	      return dispatch(setUser(res.data));
+	    });
+	  };
+	};
+	
+	var logout = exports.logout = function logout(req) {
+	  return function (dispatch) {
+	    _axios2.default.get('/logout').then(function (res) {
+	      return dispatch(setUser({}));
 	    });
 	  };
 	};
@@ -31627,6 +31635,8 @@
 	
 	var _reactRouter = __webpack_require__(246);
 	
+	var _login = __webpack_require__(244);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31766,6 +31776,7 @@
 	var mapDispatch = function mapDispatch(dispatch) {
 	  return {
 	    logout: function logout() {
+	      dispatch((0, _login.logout)());
 	      console.log('You signed out. Sorta.');
 	      _reactRouter.browserHistory.push('/');
 	    }

@@ -11,7 +11,7 @@ const setUser = user => ({ type: SET_CURRENT_USER, user });
 
 /* ------------       REDUCER     ------------------ */
 
-export default function reducer (login = {}, action) {
+export default function reducer (login = {user: {}}, action) {
   switch (action.type) {
 
     case SET_CURRENT_USER:
@@ -29,4 +29,9 @@ export default function reducer (login = {}, action) {
 export const login = (req) => dispatch => {
   axios.post('/login', req)
        .then(res => dispatch(setUser(res.data)));
+}
+
+export const logout = (req) => dispatch => {
+  axios.get('/logout')
+       .then(res => dispatch(setUser({})));
 }

@@ -1,4 +1,4 @@
-'use strict'; 
+'use strict';
 
 var app = require('express')();
 var path = require('path');
@@ -27,6 +27,8 @@ app.use(function (req, res, next) {
 
 app.use('/login', require('../api/login.router'));
 app.use('/api', require('../api/api.router'));
+
+app.use('/', require('../api/logout.router'));
 
 var validFrontendRoutes = ['/', '/stories', '/users', '/stories/:id', '/users/:id', '/signup', '/login'];
 var indexPath = path.join(__dirname, '..', '..', 'browser', 'index.html');
